@@ -4,61 +4,71 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.dao.UserDAO;
+import web.models.Role;
 import web.models.User;
+import web.repository.UserRepository;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
-    private UserDAO userDAO;
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public List<User> getAllUsers() {
-        return userDAO.getAllUsers();
+        Iterable<User> users = userRepository.findAll();
+        return (List<User>) users;
     }
 
     @Override
     @Transactional
-    public User show(int id) {
-        return userDAO.show(id);
+    public User show(Integer id) {
+        User user = userRepository.findById(id).get();
+        return user;
     }
 
     @Override
     @Transactional
-    public void update(int id, User updateUser) {
-        User userToBeUpdated = userDAO.show(id);
+    public void update(Integer id, User updateUser) {
+        User userToBeUpdated = userRepository.findById(id).get();
         userToBeUpdated.setName(updateUser.getName());
-        userToBeUpdated.setPassword(updateUser.getPassword());
+        userToBeUpdated.setPassword(passwordEncoder.encode(updateUser.getPassword()));
         userToBeUpdated.setRoles(updateUser.getRoles());
-        userDAO.update(userToBeUpdated);
+        userRepository.save(userToBeUpdated);
     }
 
     @Override
     @Transactional
-    public void save(User person) {
-        userDAO.save(person);
+    public void save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void delete(int id) {
-        userDAO.delete(userDAO.show(id));
+    public void delete(Integer id) {
+        userRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userDAO.getUserByName(s);
+        return userRepository.findByName(s).get();
     }
 
     @Override
     @Transactional
     public User getUserByName(String name) {
-        return userDAO.getUserByName(name);
+        return userRepository.findByName(name).get();
     }
 }
