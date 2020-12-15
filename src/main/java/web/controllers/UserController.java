@@ -17,9 +17,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private RoleService roleService;
-
     @GetMapping("")
     public String getUserPage(Model model, Principal principal) {
         String userName = principal.getName();

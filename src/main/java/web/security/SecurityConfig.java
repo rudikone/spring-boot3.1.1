@@ -49,8 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true);
     }
 
-    // Необходимо для шифрования паролей
-    // В данном примере не используется, отключен
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);

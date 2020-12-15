@@ -32,14 +32,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public User show(Integer id) {
+    public User show(Long id) {
         User user = userRepository.findById(id).get();
         return user;
     }
 
     @Override
     @Transactional
-    public void update(Integer id, User updateUser) {
+    public void update(Long id, User updateUser) {
         User userToBeUpdated = userRepository.findById(id).get();
         userToBeUpdated.setName(updateUser.getName());
         userToBeUpdated.setPassword(passwordEncoder.encode(updateUser.getPassword()));
@@ -56,14 +56,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void delete(Integer id) {
+    public void delete(Long id) {
         userRepository.deleteById(id);
     }
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userRepository.findByName(s).get();
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        return userRepository.findByName(userName).get();
     }
 
     @Override

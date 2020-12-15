@@ -60,7 +60,6 @@ public class DatabaseConfig {
         return properties;
     }
 
-
     @Bean
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();

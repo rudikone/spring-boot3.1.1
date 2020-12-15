@@ -16,16 +16,16 @@ public class User implements UserDetails {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
     private String name;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 255)
     @NotEmpty(message = "Password should not be empty")
-    @Size(min = 2, max = 100, message = "Password should be between 2 and 30 characters")
+    @Size(min = 2, max = 255, message = "Password should be between 2 and 30 characters")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -40,18 +40,23 @@ public class User implements UserDetails {
 
     }
 
-    public User(Integer id, @NotEmpty(message = "Name should not be empty") @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters") String name, @NotEmpty(message = "Password should not be empty") @Size(min = 2, max = 30, message = "Password should be between 2 and 30 characters") String password, Set<Role> roles) {
+    public User(Long id,
+                @NotEmpty(message = "Name should not be empty")
+                @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters") String name,
+                @NotEmpty(message = "Password should not be empty")
+                @Size(min = 2, max = 30, message = "Password should be between 2 and 30 characters") String password,
+                Set<Role> roles) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.roles = roles;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
